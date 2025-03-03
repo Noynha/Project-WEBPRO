@@ -157,14 +157,14 @@ CREATE TABLE `user_member` (
   `Name_member` varchar(20) NOT NULL,
   `Phone` varchar(10) NOT NULL,
   `Email` varchar(50) NOT NULL,
-  `Password` varchar(20) NOT NULL
+  `Passwords` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_member`
 --
 
-INSERT INTO `user_member` (`User_id`, `Name_member`, `Phone`, `Email`, `Password`) VALUES
+INSERT INTO `user_member` (`User_id`, `Name_member`, `Phone`, `Email`, `Passwords`) VALUES
 ('atittaya27', 'atittaya', '0918486072', 'maiatittaya.a@gmail.com', 'atittaya');
 
 --
