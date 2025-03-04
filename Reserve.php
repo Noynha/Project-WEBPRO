@@ -56,65 +56,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>จองโต๊ะอาหาร</title>
-    <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        width: 40%;
-        margin: 50px auto;
-        padding: 60px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-        text-align: center;
-        color: #333;
-    }
-
-    form {
-        display: flex;
-        flex-direction: column;
-    }
-
-    label {
-        margin-top: 10px;
-        font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="date"],
-    input[type="time"],
-    input[type="number"] {
-        padding: 8px;
-        margin: 5px 0;
-        font-size: 18px;
-        border: 3px solid #ddd;
-        border-radius: 4px;
-    }
-
-    input[type="submit"] {
-        margin-top: 20px;
-        padding: 10px;
-        font-size: 16px;
-        color: #fff;
-        background-color: #4CAF50;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-        background-color: #45a049;
-    }
-
-    </style>
+    <link rel="stylesheet" href="css/styleReserve.css">
 </head>
 <body>
     <div class="container">

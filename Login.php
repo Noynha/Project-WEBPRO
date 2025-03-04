@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p class="error-message"> <?= htmlspecialchars($error_message) ?> </p>
                 <?php endif; ?>
 
-                <input type="text" name="username" placeholder="ชื่อผู้ใช้" required>
+                <input type="text" name="username" placeholder="ชื่อไอดีผู้ใช้" required>
                 <input type="password" name="password" placeholder="รหัสผ่าน" required>
 
                 <button type="submit">เข้าสู่ระบบ</button>

@@ -2,6 +2,8 @@
 
 require_once 'config.php';
 
+
+
 $sql = "SELECT * FROM menu";
 $result = $conn->query($sql);
 ?>
@@ -12,8 +14,10 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <title>Restaurant Menu</title>
     <style>
+       @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+             font-family: "Poppins", serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
