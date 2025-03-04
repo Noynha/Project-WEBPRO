@@ -14,7 +14,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(to right,#e2e2e2, #c9d6ff);
+    background: linear-gradient(to right,#e2e2e2, #e18b8b);
     color: #333;
 }
 
@@ -52,7 +52,7 @@ input {
 button {
     width: 100%;
     padding: 12px;
-    background: #7494ec;
+    background: #45a049;
     border-radius: 6px;
     border: none;
     cursor: pointer;
