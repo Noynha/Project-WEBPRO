@@ -5,7 +5,7 @@ session_unset(); // ลบข้อมูลทั้งหมดในเซส
 
 session_destroy(); // ทำลายเซสชัน
 
-header("Location: Home.php"); // เปลี่ยนเส้นทางไปที่หน้า..
+header("Location: Login.php"); // เปลี่ยนเส้นทางไปที่หน้า..
 
 exit();
 ?>

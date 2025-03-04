@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($password === $hashed_password) {
                 $_SESSION["user_id"] = $id;
                 $_SESSION["username"] = $username;
-                header("Location: Home.php");
+                header("Location: Homepage.php");
                 exit();
             } else {
                 $error_message = "รหัสผ่านไม่ถูกต้อง";
