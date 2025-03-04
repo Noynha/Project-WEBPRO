@@ -4,14 +4,14 @@ require_once 'config.php';
 
 // ตรวจสอบการส่งข้อมูลผ่าน form
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST["username"]);
+    $userid = trim($_POST["userid"]);
     $password = trim($_POST["password"]);
     
-    $sql = "SELECT User_id, passwords FROM user_member WHERE Name_member = ?";
+    $sql = "SELECT User_id, passwords FROM user_member WHERE User_id = ?";
     $stmt = $conn->prepare($sql); // เพื่อป้องกัน SQL Injection
     
     if ($stmt) {
-        $stmt->bind_param("s", $username);
+        $stmt->bind_param("s", $userid);
         $stmt->execute();
         $stmt->store_result();
         
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // if (password_verify($password, $hashed_password)) { //// ป้องกันรหัสผ่าน
             if ($password === $hashed_password) {
                 $_SESSION["user_id"] = $id;
-                $_SESSION["username"] = $username;
+                // $_SESSION["username"] = $username;
                 header("Location: Homepage.php");
                 exit();
             } else {
@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p class="error-message"> <?= htmlspecialchars($error_message) ?> </p>
                 <?php endif; ?>
 
-                <input type="text" name="username" placeholder="ชื่อไอดีผู้ใช้" required>
+                <input type="text" name="userid" placeholder="ชื่อไอดีผู้ใช้" required>
                 <input type="password" name="password" placeholder="รหัสผ่าน" required>
 
                 <button type="submit">เข้าสู่ระบบ</button>
