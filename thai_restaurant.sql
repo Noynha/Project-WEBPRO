@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 28, 2025 at 05:26 PM
+-- Generation Time: Mar 04, 2025 at 10:27 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -144,7 +144,9 @@ CREATE TABLE `reservations` (
 --
 
 INSERT INTO `reservations` (`reservation_id`, `name`, `phone`, `reservation_date`, `reservation_time`, `num_people`, `status`) VALUES
-(1, 'Pornchanit', '0928848137', '2025-03-22', '23:08:00', 3, NULL);
+(1, 'Pornchanit', '0928848137', '2025-03-22', '23:08:00', 3, NULL),
+(2, 'noynha', '+66970483949', '2025-03-05', '10:30:00', 1, NULL),
+(3, 'noynha', '+66970483949', '2025-03-05', '10:30:00', 12, NULL);
 
 -- --------------------------------------------------------
 
@@ -165,7 +167,8 @@ CREATE TABLE `user_member` (
 --
 
 INSERT INTO `user_member` (`User_id`, `Name_member`, `Phone`, `Email`, `Passwords`) VALUES
-('atittaya27', 'atittaya', '0918486072', 'maiatittaya.a@gmail.com', 'atittaya');
+('atittaya27', 'atittaya', '0918486072', 'maiatittaya.a@gmail.com', 'atittaya'),
+('noynha2005', 'noynha', '0878317248', 'paritasurin@gmail.com', '1234');
 
 --
 -- Indexes for dumped tables
@@ -247,7 +250,7 @@ ALTER TABLE `patment`
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

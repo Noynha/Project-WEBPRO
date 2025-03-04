@@ -1,12 +1,12 @@
 <?php
 
-require_once 'config.php';
+// require_once 'config.php';
 
-// // กำหนดค่าการเชื่อมต่อฐานข้อมูล
-// $host = 'localhost';
-// $dbname = 'restaurant_booking';
-// $username = 'root';
-// $password = '';
+// กำหนดค่าการเชื่อมต่อฐานข้อมูล
+$host = 'localhost';
+$dbname = "thai_restaurant";
+$username = 'root';
+$password = '';
 
 try {
     // เชื่อมต่อฐานข้อมูล
