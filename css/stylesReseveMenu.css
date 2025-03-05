@@ -11,10 +11,10 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%; /* ให้แถบเมนูยืดเต็มความกว้าง */
+    width: 100%;
     display: flex;
-    justify-content: center; /* จัดตำแหน่งลิงก์เมนูให้เป็นกลาง */
-    z-index: 999; /* ให้แถบเมนูอยู่เหนือเนื้อหาทั้งหมด */
+    justify-content: center;
+    z-index: 999;
 }
 
 .navbar a {
@@ -23,7 +23,7 @@ body {
     text-align: center;
     padding: 14px 20px;
     text-decoration: none;
-    flex-grow: 1; /* ให้ลิงก์เมนูยืดเต็มพื้นที่ */
+    flex-grow: 1;
 }
 
 .navbar a:hover {
@@ -33,7 +33,7 @@ body {
 
 .container {
     padding: 20px;
-    margin-top: 60px; /* เพิ่มระยะห่างจากแถบเมนู */
+    margin-top: 60px;
 }
 
 .menu-item {
@@ -80,28 +80,4 @@ body {
     text-align: center;
     margin: 0 10px;
 }
-/* เพิ่มสไตล์ให้กับปุ่ม "สั่งอาหาร" */
-.order-button-container {
-    position: fixed;
-    bottom: 20px; /* ระยะห่างจากด้านล่างของหน้าจอ */
-    left: 50%;
-    transform: translateX(-50%); /* ทำให้ปุ่มอยู่กลางหน้าจอ */
-    width: 100%;
-    text-align: center;
-    z-index: 100; /* ให้ปุ่มอยู่เหนือเนื้อหาอื่นๆ */
-}
 
-.order-btn {
-    background-color: #f44336; 
-    color: white; 
-    font-size: 18px;
-    padding: 15px 30px; 
-    border: none; 
-    border-radius: 30px; 
-    cursor: pointer;
-    transition: background-color 0.3s ease; 
-}
-
-.order-btn:hover {
-    background-color: #e53935;
-}

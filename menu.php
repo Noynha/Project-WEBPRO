@@ -2,8 +2,6 @@
 
 require_once 'config.php';
 
-
-
 $sql = "SELECT * FROM menu";
 $result = $conn->query($sql);
 ?>
@@ -21,6 +19,32 @@ $result = $conn->query($sql);
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
+        }
+
+        .navbar {
+            background-color: rgb(239, 70, 18);
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .navbar a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            flex-grow: 1;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
         }
 
         h1, h2 {
@@ -81,6 +105,14 @@ $result = $conn->query($sql);
     </style>
 </head>
 <body>
+
+    <div class="navbar">
+        <a href="Homepage.php">หน้าหลัก</a>
+        <a href="menu.php">เมนู</a>
+        <a href="reserveMenu.php">สั่งอาหาร</a>
+        <a href="Reserve.php">จองโต๊ะ</a>
+        <a href="Logout.php">ออกจากระบบ</a>
+    </div>
 
     <h1>Welcome! Here is Our Menu.</h1>
     <h2>Thai Inspired Kitchen</h2>

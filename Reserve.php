@@ -8,6 +8,8 @@ $dbname = "thai_restaurant";
 $username = 'root';
 $password = '';
 
+$successMessage = ''; // ตัวแปรสำหรับเก็บข้อความการจองสำเร็จ
+
 try {
     // เชื่อมต่อฐานข้อมูล
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
@@ -42,7 +44,8 @@ try {
         // ดำเนินการคำสั่ง
         $stmt->execute();
 
-        echo "จองโต๊ะสำเร็จแล้ว! เราจะติดต่อคุณเร็วๆ นี้";
+        // กำหนดข้อความหลังจากจองสำเร็จ
+        $successMessage = "จองโต๊ะสำเร็จแล้ว! เราจะติดต่อคุณเร็วๆ นี้";
     }
 } catch (PDOException $e) {
     echo "การเชื่อมต่อฐานข้อมูลล้มเหลว: " . $e->getMessage();
@@ -57,8 +60,32 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>จองโต๊ะอาหาร</title>
     <link rel="stylesheet" href="css/styleReserve.css">
+    <style>
+        /* เพิ่ม CSS สำหรับการแสดงข้อความ */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            display: <?php echo ($successMessage ? "block" : "none"); ?>; /* แสดงข้อความเมื่อจองสำเร็จ */
+        }
+    </style>
 </head>
 <body>
+
+    <div class="navbar">
+        <a href="Homepage.php">หน้าหลัก</a>
+        <a href="menu.php">เมนู</a>
+        <a href="reserveMenu.php">สั่งอาหาร</a>
+        <a href="Reserve.php">จองโต๊ะ</a>
+        <a href="Logout.php">ออกจากระบบ</a>
+    </div>
+
     <div class="container">
         <h2>การจองโต๊ะอาหาร</h2>
         <form action="" method="POST">
@@ -103,6 +130,11 @@ try {
 
             <input type="submit" value="จองโต๊ะ">
         </form>
+    </div>
+
+    <!-- ข้อความการจองสำเร็จ -->
+    <div class="success-message">
+        <?php echo $successMessage; ?>
     </div>
 </body>
 </html>

@@ -26,12 +26,22 @@ $username = isset($_SESSION["username"]) ? $_SESSION["username"] : "Guest";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
+    <link rel="stylesheet" href="css/styleHomepage.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+
+    <div class="navbar">
+        <a href="Homepage.php">หน้าหลัก</a>
+        <a href="menu.php">เมนู</a>
+        <a href="reserveMenu.php">สั่งอาหาร</a>
+        <a href="Reserve.php">จองโต๊ะ</a>
+        <a href="Logout.php">ออกจากระบบ</a>
+    </div>
+
 <div class="container">
     <h2 class='mt-4'>ยินดีต้อนรับ <?php htmlspecialchars($username) ?></h2>
-    <a href='Logout.php' class='btn btn-danger'>ออกจากระบบ</a>
+    <!-- <a href='Logout.php' class='btn btn-danger'>ออกจากระบบ</a> -->
 
     <h3 class='mt-4'>เมนูอาหาร</h3>
     <div class='row'>
