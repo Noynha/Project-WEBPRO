@@ -28,6 +28,7 @@ $username = isset($_SESSION["username"]) ? $_SESSION["username"] : "Guest";
     <title>Homepage</title>
     <link rel="stylesheet" href="css/styleHomepage.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/fonts.css">
 </head>
 <body>
 

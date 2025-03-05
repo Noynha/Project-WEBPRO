@@ -1,22 +1,53 @@
 <?php
 require_once 'config.php';
 
-// เริ่มต้น session เพื่อดึงค่า User_id
+// // เริ่มต้น session เพื่อดึงค่า User_id
+// session_start();
+
+// // ตรวจสอบว่า User_id ถูกตั้งใน session หรือไม่
+// if (!isset($_SESSION['User_id'])) {
+//     echo "<script>
+//     Swal.fire({
+//    icon: 'warning',
+//    title: 'แจ้งเตือน',
+//    text: 'กรุณาล็อกอินก่อนทำการสั่งซื้อ',
+//    confirmButtonText: 'ตกลง'
+//}).then((result) => {
+//    if (result.isConfirmed) {
+//        window.location.href = 'login.php';
+//    }
+//});
+// </script>";
+//exit();
+//}
+
+// // ดึงค่า User_id จาก session
+// $userId = $_SESSION['User_id'];
+
+// // เช็คการเชื่อมต่อฐานข้อมูล
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// }
+
+
 session_start();
 
-// ตรวจสอบว่า User_id ถูกตั้งใน session หรือไม่
-if (!isset($_SESSION['User_id'])) {
-    echo "กรุณาล็อกอินก่อนทำการสั่งซื้อ";
+if (!isset($_SESSION["user_id"])) {
+    header("Location: Login.php");
     exit();
 }
 
-// ดึงค่า User_id จาก session
-$userId = $_SESSION['User_id'];
+require_once 'config.php';
 
-// เช็คการเชื่อมต่อฐานข้อมูล
+$conn = new mysqli("localhost", "root", "", "thai_restaurant");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+$sql = "SELECT Name_menu, Price_menu, Picture_menu FROM menu";
+$result = $conn->query($sql);
+
+$username = isset($_SESSION["username"]) ? $_SESSION["username"] : "Guest";
 
 $sql = "SELECT * FROM menu";
 $result = $conn->query($sql);
@@ -71,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ร้านอาหาร</title>
     <link rel="stylesheet" href="css/stylesReseveMenu.css">
+    <link href="https://fonts.googleapis.com/css2?family=Krub:wght@300;400;500&family=Thasadith:wght@400;700&display=swap" rel="stylesheet">
     <style>
         .order-button-container {
             position: fixed;
@@ -78,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
+            
         }
         .order-btn {
             padding: 10px 20px;
@@ -90,6 +123,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         .order-btn:hover {
             background-color: #45a049;
+        }
+
+        body {
+            font-family: 'Krub', sans-serif; /* ใช้ฟอนต์ Krub */
         }
     </style>
 </head>

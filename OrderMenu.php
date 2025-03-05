@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // ถ้ามีการสั่งซื้อ
     if ($totalAmount > 0) {
         // บันทึกคำสั่งซื้อ
-        $sql = "INSERT INTO `order` (`User_id`, `Total_price`, `Time`) VALUES (?, ?, NOW())";
+        $sql = "INSERT INTO `orders` (`User_id`, `Total_price`, `Time`) VALUES (?, ?, NOW())";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("si", $_SESSION['user_id'], $totalAmount); // ใช้ session สำหรับ User_id
         $stmt->execute();
@@ -82,6 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>สรุปรายการสั่งอาหาร</title>
     <link rel="stylesheet" href="css/stylesReseveMenu.css">
+    <link rel="stylesheet" href="css/fonts.css">
+
 </head>
 <body>
     <div class="navbar">
@@ -91,8 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="Reserve.php">จองโต๊ะ</a>
         <a href="Logout.php">ออกจากระบบ</a>
     </div>
-
-    <h2>สรุปรายการสั่งอาหาร</h2>
+    <center>
+    <h2><br><br>สรุปรายการสั่งอาหาร</h2>
 
     <form method="POST">
         <table border="1">
@@ -120,6 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="order-button-container">
             <button type="submit" class="order-btn">ยืนยันการสั่งซื้อ</button>
+                </center>
         </div>
     </form>
 

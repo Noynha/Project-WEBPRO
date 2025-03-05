@@ -1,7 +1,7 @@
 <?php
 $hostname = "localhost";
-$username = "root"; 
-$password = "";      
+$username = "root";
+$password = "";
 $dbname = "thai_restaurant";
 
 // เชื่อมต่อฐานข้อมูล
@@ -20,15 +20,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST["name"];
     $description = $_POST["description"];
     $price = $_POST["price"];
-    
+
     // จัดการอัปโหลดไฟล์รูป
     $target_dir = "images/"; // โฟลเดอร์เก็บรูป
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true); // สร้างโฟลเดอร์ถ้ายังไม่มี
     }
-    
+
     $target_file = $target_dir . basename($_FILES["image"]["name"]);
-    
+
     if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
         $image_path = $target_file; // เก็บพาธของรูปในฐานข้อมูล
 
@@ -51,17 +51,43 @@ mysqli_close($conn);
 
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เพิ่มเมนูใหม่</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Krub:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Thasadith:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Krub', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
         }
+
+        .container {
+            font-family: 'Krub', sans-serif;
+            /* ใช้ Poppins สำหรับฟอร์ม */
+        }
+
+        .container h2 {
+            font-family: 'Krub', sans-serif;
+            /* ใช้ Krub สำหรับหัวข้อเพิ่มเมนู */
+        }
+
+        .container label {
+            font-family: 'Krub', sans-serif;
+            /* ใช้ Thasadith สำหรับคำอธิบายของฟอร์ม */
+        }
+
+        .container input[type="text"],
+        .container input[type="number"],
+        .container textarea {
+            font-family: 'Krub', sans-serif;
+            /* ใช้ Poppins สำหรับอินพุตและข้อความ */
+        }
+
 
         .container {
             width: 50%;
@@ -88,7 +114,9 @@ mysqli_close($conn);
             color: #333;
         }
 
-        input[type="text"], input[type="number"], textarea {
+        input[type="text"],
+        input[type="number"],
+        textarea {
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
@@ -102,7 +130,7 @@ mysqli_close($conn);
 
         input[type="submit"] {
             padding: 10px;
-            background-color:rgb(239, 70, 18);
+            background-color: rgb(239, 70, 18);
             color: white;
             border: none;
             border-radius: 4px;
@@ -123,7 +151,7 @@ mysqli_close($conn);
         }
 
         .error {
-            background-color:rgb(239, 70, 18);
+            background-color: rgb(239, 70, 18);
             color: white;
             padding: 10px;
             margin: 10px 0;
@@ -137,6 +165,7 @@ mysqli_close($conn);
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -159,4 +188,5 @@ mysqli_close($conn);
     </div>
 
 </body>
+
 </html>

@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Krub', sans-serif;
     background-color: #f7f7f7;
     margin: 0;
     padding: 0;
@@ -15,6 +15,7 @@ body {
     display: flex;
     justify-content: center;
     z-index: 999;
+    font-family: 'Krub', sans-serif;
 }
 
 .navbar a {
@@ -24,16 +25,19 @@ body {
     padding: 14px 20px;
     text-decoration: none;
     flex-grow: 1;
+    font-family: 'Krub', sans-serif;
 }
 
 .navbar a:hover {
     background-color: #ddd;
     color: black;
+    font-family: 'Krub', sans-serif;
 }
 
 .container {
     padding: 20px;
     margin-top: 60px;
+    font-family: 'Krub', sans-serif;
 }
 
 .menu-item {
@@ -43,6 +47,7 @@ body {
     background-color: white;
     margin-bottom: 10px;
     border-radius: 5px;
+    font-family: 'Krub', sans-serif;
 }
 
 .menu-item img {
@@ -59,6 +64,7 @@ body {
 .quantity-controls {
     display: flex;
     align-items: center;
+      font-family: 'Krub', sans-serif;
 }
 
 .quantity-controls button {
@@ -69,15 +75,18 @@ body {
     border-radius: 5px;
     cursor: pointer;
     margin: 0 5px;
+    
 }
 
 .quantity-controls button:hover {
     background-color: #45a049;
+    font-family: 'Krub', sans-serif;
 }
 
 .quantity-controls input {
     width: 40px;
     text-align: center;
     margin: 0 10px;
+    font-family: 'Krub', sans-serif;
 }
 

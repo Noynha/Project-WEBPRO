@@ -13,13 +13,41 @@ $result = $conn->query($sql);
     <title>Restaurant Menu</title>
     <style>
        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+       @import url('https://fonts.googleapis.com/css2?family=Krub:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Thasadith:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
         body {
-             font-family: "Poppins", serif;
+            font-family: "Krub", sans-serif; 
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
         }
+        
+
+        h1, h2 {
+            font-family: "Krub", sans-serif; /* ใช้ฟอนต์ Krub สำหรับหัวข้อ h1 และ h2 */
+        }
+
+        p {
+            font-family: "Krub", sans-serif;  /* ใช้ฟอนต์ Thasadith สำหรับข้อความใน p */
+        }
+
+        .price {
+            font-family: "Krub", sans-serif;  /* ใช้ Poppins สำหรับราคาด้วย */
+        }
+
+        .menu-item h3 {
+            font-family: 'Krub', sans-serif; /* ใช้ฟอนต์ Krub สำหรับชื่อเมนู */
+        }
+
+        .menu-item p {
+            font-family: "Krub", sans-serif;  /* ใช้ฟอนต์ Thasadith สำหรับคำอธิบายเมนู */
+        }
+
+        .add-menu-link a {
+            font-family: "Krub", sans-serif; /* ใช้ฟอนต์ Poppins สำหรับลิงค์เพิ่มเมนู */
+        }
+
+
 
         .navbar {
             background-color: rgb(239, 70, 18);
@@ -78,6 +106,8 @@ $result = $conn->query($sql);
 
         .menu-item img {
             width: 100%;
+            height: 200px;
+            object-fit: cover; 
             border-radius: 8px;
         }
 
@@ -102,6 +132,28 @@ $result = $conn->query($sql);
                 width: 90%; 
             }
         }
+
+        .add-menu-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .add-menu-link a {
+            font-size: 1.2em;
+            color: rgb(239, 70, 18);
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #f4f4f9;
+            border: 2px solid rgb(239, 70, 18);
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .add-menu-link a:hover {
+            background-color: rgb(239, 70, 18);
+            color: white;
+        }
+
     </style>
 </head>
 <body>
@@ -114,7 +166,7 @@ $result = $conn->query($sql);
         <a href="Logout.php">ออกจากระบบ</a>
     </div>
 
-    <h1>Welcome! Here is Our Menu.</h1>
+    <h1><br><br> Here is Our Menu.</h1>
     <h2>Thai Inspired Kitchen</h2>
 
     <div class="menu-container">
@@ -122,7 +174,7 @@ $result = $conn->query($sql);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo "<div class='menu-item'>
-                        <img src='{$row['Picture_menu']}'>
+                        <img src='{$row['Picture_menu']}' alt='{$row['Name_menu']}'>
                         <h3>{$row['Name_menu']}</h3>
                         <p>{$row['Explanation_menu']}</p>
                         <p class='price'>{$row['Price_menu']} บาท</p>
@@ -134,9 +186,13 @@ $result = $conn->query($sql);
         ?>
     </div>
 
+    <div class="add-menu-link">
+        <a href="add_menu.php">เพิ่มเมนู</a>
+    </div>
+
 </body>
 </html>
 
 <?php
 mysqli_close($conn);
-?>
+?> 
