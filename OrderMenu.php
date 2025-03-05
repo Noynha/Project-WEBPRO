@@ -1,78 +1,117 @@
 <?php
 require_once 'config.php';
+session_start();
 
-// ตรวจสอบว่าได้รับข้อมูลจากฟอร์มหรือไม่
-$orderItems = [];
-$totalAmount = 0;
-$orderID = null;
-
-session_start(); // เริ่ม session เพื่อตรวจสอบการเข้าสู่ระบบ
-
-// ตรวจสอบว่า user_id ใน session มีหรือไม่
-if (!isset($_SESSION['user_id'])) {
-    echo "กรุณาล็อกอินเพื่อทำการสั่งซื้อ";
+if (!isset($_SESSION["user_id"])) {
+    header("Location: Login.php");
     exit();
 }
 
-// ตรวจสอบว่ามีการส่งข้อมูลจากฟอร์มหรือไม่
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    foreach ($_POST as $key => $value) {
-        if (strpos($key, 'quantity_') === 0 && $value > 0) {
-            // แยกชื่อเมนูจาก key
-            $menuID = str_replace('quantity_', '', $key);
+$conn = new mysqli("localhost", "root", "", "thai_restaurant");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// แสดง User ID ที่ใช้ในเซสชัน
+$userId = $_SESSION['user_id'];
+
+// ตรวจสอบว่า User_id มีอยู่ในตาราง user_member
+$sql = "SELECT User_id FROM user_member WHERE User_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $userId);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows === 0) {
+    echo "User  ID ไม่ถูกต้อง";
+    exit();
+}
+
+$stmt->close();
+
+// ตรวจสอบว่ามีการส่ง selected_items มาหรือไม่
+if (isset($_GET['selected_items'])) {
+    $selectedItems = json_decode($_GET['selected_items'], true);
+    
+    if (!empty($selectedItems)) {
+        // แสดงรายการที่เลือก
+        // echo "<h2>รายการที่สั่งซื้อ</h2>";
+        // echo "<table>";
+        // echo "<tr><th>ชื่อเมนู</th><th>จำนวน</th><th>ราคา</th><th>รวม</th></tr>";
+        
+        $totalAmount = 0;
+
+        foreach ($selectedItems as $item) {
+            $menuId = $item['menu_id'];
+            $quantity = $item['quantity'];
 
             // ดึงข้อมูลเมนูจากฐานข้อมูล
-            $sql = "SELECT * FROM menu WHERE Menu_id = ?";
+            $sql = "SELECT Name_menu, Price_menu FROM menu WHERE Menu_id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $menuID);
+            $stmt->bind_param("i", $menuId);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $menu = $result->fetch_assoc();
+            $stmt->bind_result($name, $price);
+            $stmt->fetch();
+            $stmt->close();
 
-            // คำนวณราคา
-            $quantity = (int)$value;
-            $price = $menu['Price_menu'];
-            $totalPrice = $quantity * $price;
-
-            // เก็บข้อมูลอาหาร
-            $orderItems[] = [
-                'name' => $menu['Name_menu'],
-                'quantity' => $quantity,
-                'price' => $price,
-                'total' => $totalPrice,
-                'menuID' => $menuID,
-                'picture' => $menu['Picture_menu'] // เก็บชื่อรูปภาพเมนูด้วย
-            ];
-
-            // คำนวณยอดรวม
+            // คำนวณราคาทั้งหมด
+            $totalPrice = $price * $quantity;
             $totalAmount += $totalPrice;
-        }
-    }
 
-    // ถ้ามีการสั่งซื้อ
-    if ($totalAmount > 0) {
-        // บันทึกคำสั่งซื้อ
-        $sql = "INSERT INTO `orders` (`User_id`, `Total_price`, `Time`) VALUES (?, ?, NOW())";
+
+        }
+
+        // บันทึกคำสั่งซื้อในฐานข้อมูล
+        $sql = "INSERT INTO orders (User_id, Total_price) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("si", $_SESSION['user_id'], $totalAmount); // ใช้ session สำหรับ User_id
-        $stmt->execute();
-        $orderID = $stmt->insert_id;
-
-        // บันทึกรายละเอียดคำสั่งซื้อ
-        foreach ($orderItems as $item) {
-            $sql = "INSERT INTO `order_detail` (`Order_id`, `Name_menu`, `Price_menu`, `Picture_menu`) VALUES (?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("isds", $orderID, $item['name'], $item['price'], $item['picture']);
-            $stmt->execute();
+        $stmt->bind_param("si", $userId, $totalAmount);
+        if (!$stmt->execute()) {
+            echo "เกิดข้อผิดพลาดในการบันทึกคำสั่งซื้อ: " . $stmt->error;
+            exit();
         }
+        $orderId = $stmt->insert_id; // ดึง Order_id ล่าสุด
+        $stmt->close();
 
-        // การบันทึกเสร็จสิ้น ให้แสดงข้อความยืนยัน
-        echo '<div class="confirmation-message">การสั่งซื้อของคุณสำเร็จแล้ว!</div>';
+        // บันทึกข้อมูลใน order_detail
+        foreach ($selectedItems as $item) {
+            $menuId = $item['menu_id'];
+            $quantity = $item['quantity'];
+
+            // ดึงข้อมูลเมนูจากฐานข้อมูล
+            $sql = "SELECT Name_menu, Price_menu FROM menu WHERE Menu_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $menuId);
+            $stmt->execute();
+            $stmt->bind_result($name, $price);
+            $stmt->fetch();
+            $stmt->close();
+
+            // บันทึกข้อมูลใน order_detail
+            $sql = "INSERT INTO order_detail (Order_id, Menu_id, Name_menu, Price_menu) VALUES (?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("iisi", $orderId, $menuId, $name, $price);
+            if (!$stmt->execute()) {
+                echo "เกิดข้อผิดพลาดในการบันทึกข้อมูลใน order_detail: " . $stmt->error;
+                exit();
+            }
+            $stmt->close();
+        }
+    } else {
+        echo "ไม่มีอาหารที่เลือก";
     }
-
-    // ปิดการเชื่อมต่อฐานข้อมูล
-    $conn->close();
+} else {
+    echo "ไม่มีข้อมูลคำสั่งซื้อ";
 }
+
+// ดึงเลขที่คำสั่งซื้อ (orderID) ล่าสุดของผู้ใช้
+$orderID = null;
+$sql = "SELECT order_id FROM orders WHERE User_id = ? ORDER BY order_id DESC LIMIT 1";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$stmt->bind_result($orderID);
+$stmt->fetch();
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -80,24 +119,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สรุปรายการสั่งอาหาร</title>
-    <link rel="stylesheet" href="css/stylesReseveMenu.css">
-    <link rel="stylesheet" href="css/fonts.css">
-
+    <title>ใบเสร็จการสั่งอาหาร</title>
+    <link rel="stylesheet" href="css/styleOrder.css">
 </head>
 <body>
+
     <div class="navbar">
-        <a href="Homepage.php">หน้าหลัก</a>
+        <!-- <a href="Homepage.php">หน้าหลัก</a> -->
         <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>
         <a href="Logout.php">ออกจากระบบ</a>
     </div>
-    <center>
-    <h2><br><br>สรุปรายการสั่งอาหาร</h2>
-
-    <form method="POST">
-        <table border="1">
+    <div class="receipt-container">
+        <div class="receipt-header">
+            <h1>ใบเสร็จการสั่งอาหาร</h1>
+            <p>ร้านอาหาร Thai Restaurant</p>
+            <p>เลขที่คำสั่งซื้อ: <?php echo $orderID ? $orderID : "ไม่ระบุ"; ?></p>
+        </div>
+        
+        <table class="receipt-table">
             <thead>
                 <tr>
                     <th>ชื่อเมนู</th>
@@ -107,24 +148,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($orderItems as $item): ?>
+                <?php if (!empty($selectedItems)): ?>
+                    <?php foreach ($selectedItems as $item): ?>
                     <tr>
-                        <td><?php echo $item['name']; ?></td>
-                        <td><?php echo $item['quantity']; ?></td>
-                        <td><?php echo number_format($item['price'], 2); ?> บาท</td>
-                        <td><?php echo number_format($item['total'], 2); ?> บาท</td>
+                        <td><?php
+                            // ดึงชื่อเมนูจากฐานข้อมูล
+                            $menuId = $item['menu_id'];
+                            $sql = "SELECT Name_menu FROM menu WHERE Menu_id = ?";
+                            $stmt = $conn->prepare($sql);
+                            $stmt->bind_param("i", $menuId);
+                            $stmt->execute();
+                            $stmt->bind_result($name);
+                            $stmt->fetch();
+                            echo $name;
+                            $stmt->close();
+                        ?></td>
+                        <td><?php echo $item['quantity']; ?> ชิ้น</td>
+                        <td><?php
+                            // ดึงราคาเมนูจากฐานข้อมูล
+                            $sql = "SELECT Price_menu FROM menu WHERE Menu_id = ?";
+                            $stmt = $conn->prepare($sql);
+                            $stmt->bind_param("i", $menuId);
+                            $stmt->execute();
+                            $stmt->bind_result($price);
+                            $stmt->fetch();
+                            echo number_format($price, 2);
+                            $stmt->close();
+                        ?> บาท</td>
+                        <td><?php echo number_format($item['quantity'] * $price, 2); ?> บาท</td>
                     </tr>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4" style="text-align: center;">ไม่มีรายการอาหารที่สั่ง</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
 
-        <h3>ยอดรวม: <?php echo number_format($totalAmount, 2); ?> บาท</h3>
-
-        <div class="order-button-container">
-            <button type="submit" class="order-btn">ยืนยันการสั่งซื้อ</button>
-                </center>
+        <div class="receipt-footer">
+            <h3>ยอดรวม: <?php echo number_format($totalAmount, 2); ?> บาท</h3>
+            <p>ขอบคุณที่ใช้บริการ!</p>
         </div>
-    </form>
-
+    </div>
 </body>
 </html>

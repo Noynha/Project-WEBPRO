@@ -1,35 +1,6 @@
 <?php
 require_once 'config.php';
 
-// // เริ่มต้น session เพื่อดึงค่า User_id
-// session_start();
-
-// // ตรวจสอบว่า User_id ถูกตั้งใน session หรือไม่
-// if (!isset($_SESSION['User_id'])) {
-//     echo "<script>
-//     Swal.fire({
-//    icon: 'warning',
-//    title: 'แจ้งเตือน',
-//    text: 'กรุณาล็อกอินก่อนทำการสั่งซื้อ',
-//    confirmButtonText: 'ตกลง'
-//}).then((result) => {
-//    if (result.isConfirmed) {
-//        window.location.href = 'login.php';
-//    }
-//});
-// </script>";
-//exit();
-//}
-
-// // ดึงค่า User_id จาก session
-// $userId = $_SESSION['User_id'];
-
-// // เช็คการเชื่อมต่อฐานข้อมูล
-// if ($conn->connect_error) {
-//     die("Connection failed: " . $conn->connect_error);
-// }
-
-
 session_start();
 
 if (!isset($_SESSION["user_id"])) {
@@ -37,61 +8,42 @@ if (!isset($_SESSION["user_id"])) {
     exit();
 }
 
-require_once 'config.php';
-
 $conn = new mysqli("localhost", "root", "", "thai_restaurant");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT Name_menu, Price_menu, Picture_menu FROM menu";
+$sql = "SELECT Name_menu, Price_menu, Picture_menu, Menu_id, Explanation_menu FROM menu";
 $result = $conn->query($sql);
 
 $username = isset($_SESSION["username"]) ? $_SESSION["username"] : "Guest";
 
-$sql = "SELECT * FROM menu";
-$result = $conn->query($sql);
-
-// ตรวจสอบผลลัพธ์ของ query
-if ($result === false) {
-    echo "เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล: " . $conn->error;
-    exit();
-}
-
 // การประมวลผลการส่งฟอร์ม
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // ทำการวนลูปข้อมูลที่ส่งมาจากฟอร์ม
+    $selectedItems = []; // อาหารที่เลือก
+
     foreach ($_POST as $key => $value) {
         if (strpos($key, 'quantity_') === 0) {
-            // ดึง Menu_id จาก input ของฟอร์ม
             $menuId = str_replace('quantity_', '', $key);
             $quantity = (int) $value;
 
-            // หากจำนวนที่สั่งมากกว่าศูนย์
             if ($quantity > 0) {
-                // ดึงข้อมูลเมนูจากฐานข้อมูล
-                $sql = "SELECT * FROM menu WHERE Menu_id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $menuId);
-                $stmt->execute();
-                $menuResult = $stmt->get_result();
-                $menu = $menuResult->fetch_assoc();
-
-                // คำนวณราคาทั้งหมดของเมนู
-                $totalPrice = $menu['Price_menu'] * $quantity;
-
-                // แทรกคำสั่งซื้อเข้าสู่ฐานข้อมูล (ตาราง orders)
-                $sql = "INSERT INTO orders (Menu_id, Quantity, Total_price, User_id) VALUES (?, ?, ?, ?)";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("iiii", $menuId, $quantity, $totalPrice, $userId);
-                $stmt->execute();
+                $selectedItems[] = [
+                    'menu_id' => $menuId,
+                    'quantity' => $quantity
+                ];
             }
         }
     }
 
-    // แสดงข้อความยืนยันการสั่งซื้อ
-    echo "คำสั่งซื้อของคุณได้รับการบันทึกแล้ว!";
-    exit();
+    if (!empty($selectedItems)) {
+        // ส่งข้อมูลไปยังหน้า orderMenu.php
+        header("Location: orderMenu.php?selected_items=" . urlencode(json_encode($selectedItems)));
+        exit();
+    } else {
+        echo "กรุณาเลือกอาหารก่อนทำการสั่งซื้อ";
+        exit();
+    }
 }
 ?>
 
@@ -110,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            
         }
         .order-btn {
             padding: 10px 20px;
@@ -126,14 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         body {
-            font-family: 'Krub', sans-serif; /* ใช้ฟอนต์ Krub */
+            font-family: 'Krub', sans-serif;
         }
     </style>
 </head>
 <body>
     
     <div class="navbar">
-        <a href="Homepage.php">หน้าหลัก</a>
         <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>
@@ -141,9 +91,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="container">
-        <h2>เมนูอาหาร</h2>
+        <h2><center>เมนูอาหาร</h2>
 
-        <form action="orderMenu.php" method="POST">
+        <form action="reserveMenu.php" method="POST">
             <?php
             if ($result->num_rows > 0) {
                 // แสดงเมนู
@@ -182,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             });
         });
-
+ 
         document.querySelectorAll('.increase-btn').forEach(button => {
             button.addEventListener('click', function() {
                 let inputField = this.previousElementSibling;

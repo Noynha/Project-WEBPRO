@@ -60,9 +60,14 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>จองโต๊ะอาหาร</title>
     <link rel="stylesheet" href="css/styleReserve.css">
+    
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Krub:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Thasadith:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+        
         /* เพิ่ม CSS สำหรับการแสดงข้อความ */
         .success-message {
+            font-family: 'Krub', sans-serif;
             position: fixed;
             top: 50%;
             left: 50%;
@@ -79,7 +84,7 @@ try {
 <body>
 
     <div class="navbar">
-        <a href="Homepage.php">หน้าหลัก</a>
+        <!-- <a href="Homepage.php">หน้าหลัก</a> -->
         <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>

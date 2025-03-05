@@ -159,7 +159,7 @@ $result = $conn->query($sql);
 <body>
 
     <div class="navbar">
-        <a href="Homepage.php">หน้าหลัก</a>
+        <!-- <a href="Homepage.php">หน้าหลัก</a> -->
         <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>

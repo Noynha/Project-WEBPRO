@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($password === $hashed_password) {
                 $_SESSION["user_id"] = $id;
                 // $_SESSION["username"] = $username;
-                header("Location: Homepage.php");
+                header("Location: menu.php");
                 exit();
             } else {
                 $error_message = "รหัสผ่านไม่ถูกต้อง";
@@ -45,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เข้าสู่ระบบ</title>
+    
     <link rel="stylesheet" href="css/styleLogin-Regis.css">
 </head>
 <body>
