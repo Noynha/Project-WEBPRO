@@ -34,11 +34,6 @@ if (isset($_GET['selected_items'])) {
     $selectedItems = json_decode($_GET['selected_items'], true);
     
     if (!empty($selectedItems)) {
-        // แสดงรายการที่เลือก
-        // echo "<h2>รายการที่สั่งซื้อ</h2>";
-        // echo "<table>";
-        // echo "<tr><th>ชื่อเมนู</th><th>จำนวน</th><th>ราคา</th><th>รวม</th></tr>";
-        
         $totalAmount = 0;
 
         foreach ($selectedItems as $item) {
@@ -57,8 +52,6 @@ if (isset($_GET['selected_items'])) {
             // คำนวณราคาทั้งหมด
             $totalPrice = $price * $quantity;
             $totalAmount += $totalPrice;
-
-
         }
 
         // บันทึกคำสั่งซื้อในฐานข้อมูล
@@ -87,9 +80,9 @@ if (isset($_GET['selected_items'])) {
             $stmt->close();
 
             // บันทึกข้อมูลใน order_detail
-            $sql = "INSERT INTO order_detail (Order_id, Menu_id, Name_menu, Price_menu) VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO order_detail (Order_id, Menu_id, Name_menu, Price_menu, Quantity) VALUES (?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("iisi", $orderId, $menuId, $name, $price);
+            $stmt->bind_param("iissi", $orderId, $menuId, $name, $price, $quantity);  // เพิ่ม Quantity
             if (!$stmt->execute()) {
                 echo "เกิดข้อผิดพลาดในการบันทึกข้อมูลใน order_detail: " . $stmt->error;
                 exit();
@@ -121,11 +114,35 @@ $stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ใบเสร็จการสั่งอาหาร</title>
     <link rel="stylesheet" href="css/styleOrder.css">
+    <style>
+        .order-button-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        .order-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .order-btn:hover {
+            background-color: #45a049;
+        }
+
+        body {
+            font-family: 'Krub', sans-serif;
+        }
+    </style>
 </head>
 <body>
 
     <div class="navbar">
-        <!-- <a href="Homepage.php">หน้าหลัก</a> -->
         <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>
@@ -185,11 +202,18 @@ $stmt->close();
                 <?php endif; ?>
             </tbody>
         </table>
-
         <div class="receipt-footer">
-            <h3>ยอดรวม: <?php echo number_format($totalAmount, 2); ?> บาท</h3>
-            <p>ขอบคุณที่ใช้บริการ!</p>
+        <h3>ยอดรวม: <?php echo number_format($totalAmount, 2); ?> บาท</h3>
+        <p>ขอบคุณที่ใช้บริการ!</p>
+        <!-- ปุ่มชำระเงิน --> 
+        <div class="order-button-container">
+            <!-- ฟอร์มสำหรับส่งข้อมูลไปยัง payment.php -->
+            <form action="payment.php" method="POST">
+                <input type="hidden" name="order_id" value="<?php echo $orderID; ?>">
+                <button type="submit" class="order-btn">ชำระเงิน</button>
+            </form>
         </div>
+    </div>
     </div>
 </body>
 </html>

@@ -90,3 +90,31 @@ body {
     color: #4CAF50;
     margin: 0;
 }
+.payment-button {
+    background-color: #4CAF50; /* สีเขียว */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.payment-button:hover {
+    background-color: #45a049;
+}
+.payment-button {
+    background-color: #4CAF50; /* สีเขียว */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.payment-button:hover {
+    background-color: #45a049;
+}

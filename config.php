@@ -2,8 +2,8 @@
 <?php
 
 $hostname = "localhost";
-$username = "root"; 
-$password = "";      
+$username = "root";
+$password = "";
 $dbname = "thai_restaurant";
 
 $conn = mysqli_connect($hostname, $username, $password);

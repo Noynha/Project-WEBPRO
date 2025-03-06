@@ -163,6 +163,39 @@ mysqli_close($conn);
                 width: 90%;
             }
         }
+        
+        @media (max-width: 768px) {
+            .menu-item {
+                width: 90%; 
+            }
+        }
+
+        .menu-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .menu-link a {
+            font-size: 1.2em;
+            color: rgb(239, 70, 18);
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #f4f4f9;
+            border: 2px solid rgb(239, 70, 18);
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .menu-link a:hover {
+            background-color: rgb(239, 70, 18);
+            color: white;
+        }
+
+        .menu-link {
+    display: inline-block;
+    margin: 0 10px;
+      }
+
     </style>
 </head>
 
@@ -184,9 +217,13 @@ mysqli_close($conn);
             <input type="file" name="image" accept="image/*" required><br>
 
             <input type="submit" value="เพิ่มเมนู">
+
         </form>
     </div>
-
+    <div class="menu-link">
+        <a href="menu.php">กลับหน้าเมนู</a>
+    </div>
+    <br><br>
 </body>
 
 </html>

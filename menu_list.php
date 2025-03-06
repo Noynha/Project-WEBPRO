@@ -1,5 +1,4 @@
 <?php
-
 require_once 'config.php';
 
 $sql = "SELECT * FROM menu";
@@ -8,47 +7,19 @@ $result = $conn->query($sql);
 
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
-    <title>Restaurant Menu</title>
+    <title> List Menu </title>
     <style>
-       @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
-       @import url('https://fonts.googleapis.com/css2?family=Krub:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Thasadith:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Krub:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Thasadith:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+       
         body {
             font-family: "Krub", sans-serif; 
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
         }
-        
-
-        h1, h2 {
-            font-family: "Krub", sans-serif; /* ใช้ฟอนต์ Krub สำหรับหัวข้อ h1 และ h2 */
-        }
-
-        p {
-            font-family: "Krub", sans-serif;  /* ใช้ฟอนต์ Thasadith สำหรับข้อความใน p */
-        }
-
-        .price {
-            font-family: "Krub", sans-serif;  /* ใช้ Poppins สำหรับราคาด้วย */
-        }
-
-        .menu-item h3 {
-            font-family: 'Krub', sans-serif; /* ใช้ฟอนต์ Krub สำหรับชื่อเมนู */
-        }
-
-        .menu-item p {
-            font-family: "Krub", sans-serif;  /* ใช้ฟอนต์ Thasadith สำหรับคำอธิบายเมนู */
-        }
-
-        .menu-link a {
-            font-family: "Krub", sans-serif; /* ใช้ฟอนต์ Poppins สำหรับลิงค์เพิ่มเมนู */
-        }
-
-
-
         .navbar {
             background-color: rgb(239, 70, 18);
             overflow: hidden;
@@ -74,7 +45,6 @@ $result = $conn->query($sql);
             background-color: #ddd;
             color: black;
         }
-
         h1, h2 {
             text-align: center;
             margin-top: 20px;
@@ -158,10 +128,9 @@ $result = $conn->query($sql);
     display: inline-block;
     margin: 0 10px;
       }
-
-
     </style>
 </head>
+
 <body>
 
     <div class="navbar">
@@ -172,9 +141,7 @@ $result = $conn->query($sql);
         <a href="Logout.php">ออกจากระบบ</a>
     </div>
 
-    <h1><br><br> Here is Our Menu.</h1>
-    <h2>Thai Inspired Kitchen</h2>
-
+    <h1> <center><br ><br > List Menu</h1>
     <div class="menu-container">
         <?php
         if ($result->num_rows > 0) {
@@ -184,6 +151,9 @@ $result = $conn->query($sql);
                         <h3>{$row['Name_menu']}</h3>
                         <p>{$row['Explanation_menu']}</p>
                         <p class='price'>{$row['Price_menu']} บาท</p>
+                        <div class='menu-link'>
+                            <a href='edit_menu.php?Menu_id={$row['Menu_id']}'>แก้ไข</a>
+                        </div>
                     </div>";
             }
         } else {
@@ -191,17 +161,13 @@ $result = $conn->query($sql);
         }
         ?>
     </div>
-        <center>
     <div class="menu-link">
-        <a href="add_menu.php">เพิ่มเมนู</a>
-        <a href="DeleteMenu.php">ลบเมนู</a>
-        <a href="menu_list.php">แก้ไขเมนู</a>
+        <a href="menu.php">กลับหน้าเมนู</a>
     </div>
-    <br><br><br>
-
 </body>
+
 </html>
 
 <?php
 mysqli_close($conn);
-?> 
+?>

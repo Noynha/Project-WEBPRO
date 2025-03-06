@@ -1,5 +1,4 @@
 <?php
-
 require_once 'config.php';
 
 $sql = "SELECT * FROM menu";
@@ -8,46 +7,20 @@ $result = $conn->query($sql);
 
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
-    <title>Restaurant Menu</title>
+    <title>Delete Menu</title>
     <style>
-       @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
-       @import url('https://fonts.googleapis.com/css2?family=Krub:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Thasadith:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Krub:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Thasadith:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
         body {
-            font-family: "Krub", sans-serif; 
+            font-family: "Krub", sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
+            text-align: center;
         }
-        
-
-        h1, h2 {
-            font-family: "Krub", sans-serif; /* ใช้ฟอนต์ Krub สำหรับหัวข้อ h1 และ h2 */
-        }
-
-        p {
-            font-family: "Krub", sans-serif;  /* ใช้ฟอนต์ Thasadith สำหรับข้อความใน p */
-        }
-
-        .price {
-            font-family: "Krub", sans-serif;  /* ใช้ Poppins สำหรับราคาด้วย */
-        }
-
-        .menu-item h3 {
-            font-family: 'Krub', sans-serif; /* ใช้ฟอนต์ Krub สำหรับชื่อเมนู */
-        }
-
-        .menu-item p {
-            font-family: "Krub", sans-serif;  /* ใช้ฟอนต์ Thasadith สำหรับคำอธิบายเมนู */
-        }
-
-        .menu-link a {
-            font-family: "Krub", sans-serif; /* ใช้ฟอนต์ Poppins สำหรับลิงค์เพิ่มเมนู */
-        }
-
-
 
         .navbar {
             background-color: rgb(239, 70, 18);
@@ -75,8 +48,7 @@ $result = $conn->query($sql);
             color: black;
         }
 
-        h1, h2 {
-            text-align: center;
+        h1 {
             margin-top: 20px;
             color: #333;
         }
@@ -93,21 +65,17 @@ $result = $conn->query($sql);
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 8px;
-            width: 45%; 
+            width: 45%;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 15px;
             margin-bottom: 20px;
-            transition: transform 0.3s;
-        }
-
-        .menu-item:hover {
-            transform: scale(1.05);
+            text-align: center;
         }
 
         .menu-item img {
             width: 100%;
             height: 200px;
-            object-fit: cover; 
+            object-fit: cover;
             border-radius: 8px;
         }
 
@@ -121,12 +89,28 @@ $result = $conn->query($sql);
             color: #666;
         }
 
-        .price {
-            font-weight: bold;
-            color: #e74c3c;
-            font-size: 1.2em;
+        .delete-btn {
+            font-size: 1em;
+            color: white;
+            background-color: #e74c3c;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: "Krub", sans-serif;
         }
 
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            .menu-item {
+                width: 90%;
+            }
+        }
+        
         @media (max-width: 768px) {
             .menu-item {
                 width: 90%; 
@@ -159,9 +143,9 @@ $result = $conn->query($sql);
     margin: 0 10px;
       }
 
-
     </style>
 </head>
+
 <body>
 
     <div class="navbar">
@@ -172,8 +156,7 @@ $result = $conn->query($sql);
         <a href="Logout.php">ออกจากระบบ</a>
     </div>
 
-    <h1><br><br> Here is Our Menu.</h1>
-    <h2>Thai Inspired Kitchen</h2>
+    <h1><br><br> Delete Menu</h1>
 
     <div class="menu-container">
         <?php
@@ -184,24 +167,25 @@ $result = $conn->query($sql);
                         <h3>{$row['Name_menu']}</h3>
                         <p>{$row['Explanation_menu']}</p>
                         <p class='price'>{$row['Price_menu']} บาท</p>
+                        <form method='POST' action='process_delete.php' onsubmit='return confirm(\"คุณแน่ใจหรือไม่ว่าต้องการลบเมนูนี้?\");'>
+                            <input type='hidden' name='menu_id' value='{$row['Menu_id']}'>
+                            <button type='submit' name='delete' class='delete-btn'>ลบเมนู</button>
+                        </form>
                     </div>";
             }
         } else {
-            echo "<p>ไม่มีเมนู</p>";
+            echo "<p>ไม่มีเมนูที่สามารถลบได้</p>";
         }
         ?>
     </div>
-        <center>
     <div class="menu-link">
-        <a href="add_menu.php">เพิ่มเมนู</a>
-        <a href="DeleteMenu.php">ลบเมนู</a>
-        <a href="menu_list.php">แก้ไขเมนู</a>
+        <a href="menu.php">กลับหน้าเมนู</a>
     </div>
-    <br><br><br>
-
+    <br><br>
 </body>
+
 </html>
 
 <?php
 mysqli_close($conn);
-?> 
+?>
