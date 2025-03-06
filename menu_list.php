@@ -133,13 +133,13 @@ $result = $conn->query($sql);
 
 <body>
 
-    <div class="navbar">
+    <!-- <div class="navbar"> -->
         <!-- <a href="Homepage.php">หน้าหลัก</a> -->
-        <a href="menu.php">เมนู</a>
+        <!-- <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>
-        <a href="Logout.php">ออกจากระบบ</a>
-    </div>
+        <a href="Logout.php">ออกจากระบบ</a> -->
+    <!-- </div> -->
 
     <h1> <center><br ><br > List Menu</h1>
     <div class="menu-container">
@@ -164,6 +164,7 @@ $result = $conn->query($sql);
     <div class="menu-link">
         <a href="menu.php">กลับหน้าเมนู</a>
     </div>
+    <br><br> 
 </body>
 
 </html>

@@ -36,58 +36,71 @@ if (isset($_GET['selected_items'])) {
     if (!empty($selectedItems)) {
         $totalAmount = 0;
 
-        foreach ($selectedItems as $item) {
-            $menuId = $item['menu_id'];
-            $quantity = $item['quantity'];
+        // เริ่มต้น transaction
+        $conn->begin_transaction();
 
-            // ดึงข้อมูลเมนูจากฐานข้อมูล
-            $sql = "SELECT Name_menu, Price_menu FROM menu WHERE Menu_id = ?";
+        try {
+            foreach ($selectedItems as $item) {
+                $menuId = $item['menu_id'];
+                $quantity = $item['quantity'];
+
+                // ดึงข้อมูลเมนูจากฐานข้อมูล
+                $sql = "SELECT Name_menu, Price_menu FROM menu WHERE Menu_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $menuId);
+                $stmt->execute();
+                $stmt->bind_result($name, $price);
+                $stmt->fetch();
+                $stmt->close();
+
+                // คำนวณราคาทั้งหมด
+                $totalPrice = $price * $quantity;
+                $totalAmount += $totalPrice;
+            }
+
+            // บันทึกคำสั่งซื้อในฐานข้อมูล
+            $sql = "INSERT INTO orders (User_id, Total_price) VALUES (?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $menuId);
-            $stmt->execute();
-            $stmt->bind_result($name, $price);
-            $stmt->fetch();
-            $stmt->close();
-
-            // คำนวณราคาทั้งหมด
-            $totalPrice = $price * $quantity;
-            $totalAmount += $totalPrice;
-        }
-
-        // บันทึกคำสั่งซื้อในฐานข้อมูล
-        $sql = "INSERT INTO orders (User_id, Total_price) VALUES (?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("si", $userId, $totalAmount);
-        if (!$stmt->execute()) {
-            echo "เกิดข้อผิดพลาดในการบันทึกคำสั่งซื้อ: " . $stmt->error;
-            exit();
-        }
-        $orderId = $stmt->insert_id; // ดึง Order_id ล่าสุด
-        $stmt->close();
-
-        // บันทึกข้อมูลใน order_detail
-        foreach ($selectedItems as $item) {
-            $menuId = $item['menu_id'];
-            $quantity = $item['quantity'];
-
-            // ดึงข้อมูลเมนูจากฐานข้อมูล
-            $sql = "SELECT Name_menu, Price_menu FROM menu WHERE Menu_id = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $menuId);
-            $stmt->execute();
-            $stmt->bind_result($name, $price);
-            $stmt->fetch();
+            $stmt->bind_param("si", $userId, $totalAmount);
+            if (!$stmt->execute()) {
+                throw new Exception("เกิดข้อผิดพลาดในการบันทึกคำสั่งซื้อ: " . $stmt->error);
+            }
+            $orderId = $stmt->insert_id; // ดึง Order_id ล่าสุด
             $stmt->close();
 
             // บันทึกข้อมูลใน order_detail
-            $sql = "INSERT INTO order_detail (Order_id, Menu_id, Name_menu, Price_menu, Quantity) VALUES (?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("iissi", $orderId, $menuId, $name, $price, $quantity);  // เพิ่ม Quantity
-            if (!$stmt->execute()) {
-                echo "เกิดข้อผิดพลาดในการบันทึกข้อมูลใน order_detail: " . $stmt->error;
-                exit();
+            foreach ($selectedItems as $item) {
+                $menuId = $item['menu_id'];
+                $quantity = $item['quantity'];
+
+                if ($quantity == 0) continue;
+
+                // ดึงข้อมูลเมนูจากฐานข้อมูล
+                $sql = "SELECT Name_menu, Price_menu FROM menu WHERE Menu_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $menuId);
+                $stmt->execute();
+                $stmt->bind_result($name, $price);
+                $stmt->fetch();
+                $stmt->close();
+
+                // บันทึกข้อมูลใน order_detail
+                $sql = "INSERT INTO order_detail (Order_id, Menu_id, Name_menu, Price_menu, Quantity) VALUES (?, ?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("iissi", $orderId, $menuId, $name, $price, $quantity);  // เพิ่ม Quantity
+                if (!$stmt->execute()) {
+                    throw new Exception("เกิดข้อผิดพลาดในการบันทึกข้อมูลใน order_detail: " . $stmt->error);
+                }
+                $stmt->close();
             }
-            $stmt->close();
+
+            // หากไม่มีปัญหาอะไร ให้ทำการ commit
+            $conn->commit();
+
+        } catch (Exception $e) {
+            // หากเกิดข้อผิดพลาด ให้ทำการ rollback
+            $conn->rollback();
+            echo "เกิดข้อผิดพลาด: " . $e->getMessage();
         }
     } else {
         echo "ไม่มีอาหารที่เลือก";
@@ -146,6 +159,7 @@ $stmt->close();
         <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>
+        <a href="orderHistory.php">ประวัติการสั่งอาหาร</a>
         <a href="Logout.php">ออกจากระบบ</a>
     </div>
     <div class="receipt-container">

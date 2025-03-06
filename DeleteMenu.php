@@ -148,14 +148,14 @@ $result = $conn->query($sql);
 
 <body>
 
-    <div class="navbar">
+    <!-- <div class="navbar"> -->
         <!-- <a href="Homepage.php">หน้าหลัก</a> -->
-        <a href="menu.php">เมนู</a>
+        <!-- <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>
-        <a href="Logout.php">ออกจากระบบ</a>
-    </div>
-
+        <a href="Logout.php">ออกจากระบบ</a> -->
+    <!-- </div> -->
+   
     <h1><br><br> Delete Menu</h1>
 
     <div class="menu-container">

@@ -169,7 +169,9 @@ $result = $conn->query($sql);
         <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>
+        <a href="orderHistory.php">ประวัติการสั่งอาหาร</a>
         <a href="Logout.php">ออกจากระบบ</a>
+        
     </div>
 
     <h1><br><br> Here is Our Menu.</h1>
@@ -196,6 +198,8 @@ $result = $conn->query($sql);
         <a href="add_menu.php">เพิ่มเมนู</a>
         <a href="DeleteMenu.php">ลบเมนู</a>
         <a href="menu_list.php">แก้ไขเมนู</a>
+       
+
     </div>
     <br><br><br>
 

@@ -87,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="menu.php">เมนู</a>
         <a href="reserveMenu.php">สั่งอาหาร</a>
         <a href="Reserve.php">จองโต๊ะ</a>
+        <a href="orderHistory.php">ประวัติการสั่งอาหาร</a>
         <a href="Logout.php">ออกจากระบบ</a>
     </div>
 

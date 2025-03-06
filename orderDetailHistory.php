@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 session_start();
+$orderId = $_GET['order_id'];
 
 if (!isset($_SESSION["user_id"])) {
     header("Location: Login.php");
@@ -12,20 +13,21 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = '
-    SELECT 
-        orders.Order_id,
-        user_member.Name_member,
-        orders.Total_price
-    FROM 
-        orders
-    LEFT JOIN 
-        user_member
-        ON user_member.User_id = orders.User_id
-    ORDER BY 
-        orders.Order_id DESC
-';
-$result = $conn->query($sql);
+$stmt = $conn->prepare("
+SELECT 
+    order_detail.Name_menu, 
+    order_detail.Price_menu, 
+    order_detail.Quantity 
+FROM 
+    order_detail 
+LEFT JOIN orders ON orders.Order_id = order_detail.Order_id 
+WHERE 
+    orders.Order_id = ?
+");
+$stmt->bind_param("i", $orderId);
+$stmt->execute();
+$result = $stmt->get_result();
+
 if (!$result) {
     echo "No result of this commands:" . $sql;
 }
@@ -46,38 +48,32 @@ if (!$result) {
 </head>
 <body>
     <div class="flex flex-col gap-10 w-[60%] mx-auto">
-        <div class="w-full flex flex-row justify-between items-end">
-            <p class="pt-10 underline text-4xl font-medium">Order History</p>
-            <a href="./menu.php" class="w-60">
-            <button type="button" class="w-60 bg-green-700 rounded-lg py-3 text-white">
-                Back to menu
-            </button>
-        </a>
-        </div>
+        <p class="pt-10 underline text-4xl font-medium">Order History</p>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Order ID</hr>
-                    <th class="w-60 text-center">Total Price</hr>
-                    <th class="w-96">Created By</hr>
+                    <th>Menu</hr>
+                    <th class="w-60 text-center">Price</hr>
+                    <th class="w-60">Qty</hr>
+                    <th class="w-60">Total Price</hr>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($row = $result->fetch_assoc()): ?>
-                <tr class="hover:bg-gray-100 cursor-pointer"
-                onclick="window.location.href='./orderDetailHistory.php?order_id=<?php echo $row['Order_id']; ?>'"
-                >
-                    <td><?php echo $row['Order_id']; ?></td>
-                    <td class=" text-center"><?php echo $row['Total_price']; ?></td>
-                    <td><?php echo $row['Name_member']; ?></td>
+                <tr class="hover:bg-gray-100 cursor-pointer">
+                    <td><?php echo $row['Name_menu']; ?></td>
+                    <td class=" text-center"><?php echo $row['Price_menu']; ?></td>
+                    <td><?php echo $row['Quantity']; ?></td>
+                    <td class=" text-center"><?php echo $row['Price_menu'] * $row['Quantity']; ?></td>
                 </tr>
                 <?php endwhile; ?>
             </tbody>
         </table>
+        <a href="./orderHistory.php" class="w-full">
+            <button type="button" class="w-full bg-green-700 rounded-lg py-3 text-white">
+                Back
+            </button>
+        </a>
     </div>
 </body>
 </html>
-
-<?
-    $result->free_result();
-?>
